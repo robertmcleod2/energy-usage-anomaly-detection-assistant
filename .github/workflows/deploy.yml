@@ -38,7 +38,7 @@ jobs:
         shell: bash
         run: |
           echo "$AZURE_CLIENT_CERT" > ${{ vars.AZURE_CLIENT_CERT_NAME }}
-          bash deploy.sh
+          bash deployment/deploy.sh
       - name: clean up
         if: always()
         shell: bash
