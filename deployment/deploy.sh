@@ -22,8 +22,8 @@ docker push ${AZURE_RESOURCE_GROUP}.azurecr.io/dashboard
 
 # create web app
 az webapp create --name ${AZURE_RESOURCE_GROUP}app --plan ${AZURE_RESOURCE_GROUP} --resource-group  ${AZURE_RESOURCE_GROUP} \
- --deployment-container-image-name ${AZURE_RESOURCE_GROUP}.azurecr.io/dashboard \
- --docker-registry-server-user ${username} --docker-registry-server-password ${password} --https-only true
+ --container-image-name ${AZURE_RESOURCE_GROUP}.azurecr.io/dashboard \
+ --container-registry-user ${username} --container-registry-password ${password} --https-only true
 
 # set env variables
 az webapp config appsettings set --resource-group  ${AZURE_RESOURCE_GROUP} --name ${AZURE_RESOURCE_GROUP}app \
