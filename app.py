@@ -1,14 +1,14 @@
 import streamlit as st
 from dotenv import load_dotenv
 
-from basic_chatbot import chain_with_message_history
+from basic_chatbot import setup_chain
 
 load_dotenv()
 
 st.title("Energy Usage Anomaly Detection Assistant")
 
-if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-4o-mini"
+if "chain" not in st.session_state:
+    st.session_state.chain = setup_chain()
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -23,7 +23,7 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        stream = chain_with_message_history.stream(
+        stream = st.session_state.chain.stream(
             {"input": prompt}, {"configurable": {"session_id": "unused"}}
         )
         response = st.write_stream(stream)

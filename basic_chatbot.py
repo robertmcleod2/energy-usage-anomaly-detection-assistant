@@ -9,32 +9,36 @@ set_debug(True)
 
 load_dotenv()
 
-model = ChatOpenAI(model="gpt-4o-mini")
 
-chat_history = ChatMessageHistory()
+def setup_chain():
 
+    model = ChatOpenAI(model="gpt-4o-mini")
 
-prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            """You are an an energy usage anomaly detection assistant.\n
-            You are helping a user to detect anomalies in their energy usage.\n
-            The user will describe their energy usage and you will help them to detect anomalies.\n
-            You will also help the user to identify the causes of the anomalies \n
-            and suggest ways to fix them.\n
-            """,
-        ),
-        MessagesPlaceholder(variable_name="chat_history"),
-        ("human", "{input}"),
-    ]
-)
+    chat_history = ChatMessageHistory()
 
-chain = prompt | model
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an an energy usage anomaly detection assistant.\n
+                You are helping a user to detect anomalies in their energy usage.\n
+                The user will describe their energy usage and you will help them to detect anomalies.\n
+                You will also help the user to identify the causes of the anomalies \n
+                and suggest ways to fix them.\n
+                """,
+            ),
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("human", "{input}"),
+        ]
+    )
 
-chain_with_message_history = RunnableWithMessageHistory(
-    chain,
-    lambda session_id: chat_history,
-    input_messages_key="input",
-    history_messages_key="chat_history",
-)
+    chain = prompt | model
+
+    chain_with_message_history = RunnableWithMessageHistory(
+        chain,
+        lambda session_id: chat_history,
+        input_messages_key="input",
+        history_messages_key="chat_history",
+    )
+
+    return chain_with_message_history
