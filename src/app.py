@@ -1,7 +1,6 @@
 import streamlit as st
-from dotenv import load_dotenv
-
 from basic_chatbot import setup_chain
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -23,8 +22,6 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        stream = st.session_state.chain.stream(
-            {"input": prompt}, {"configurable": {"session_id": "unused"}}
-        )
+        stream = st.session_state.chain.stream({"input": prompt}, {"configurable": {"session_id": "unused"}})
         response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})

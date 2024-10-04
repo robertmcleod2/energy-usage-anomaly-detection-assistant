@@ -1,0 +1,47 @@
+# deploy dashboard to Azure Container Registry via bash script
+name: deploy_via_bash
+
+# run on push to any branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # if branch = main, environment = prod, else environment = dev
+    environment: ${{ ((github.head_ref || github.ref_name) == 'main') && 'prod' || 'dev' }}
+    permissions:
+      id-token: write
+      contents: read
+    # retrieve variables from environment secrets and variables
+    env:
+      # deplyoment variables
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_CERT_NAME: ${{ vars.AZURE_CLIENT_CERT_NAME }}
+      AZURE_CLIENT_CERT: ${{ secrets.AZURE_CLIENT_CERT }}
+      AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}  
+      # App env variables
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login to Azure and run deploy.sh
+        shell: bash
+        run: |
+          echo "$AZURE_CLIENT_CERT" > ${{ vars.AZURE_CLIENT_CERT_NAME }}
+          bash deploy.sh
+      - name: clean up
+        if: always()
+        shell: bash
+        run: |
+          az logout
+          rm ${{ vars.AZURE_CLIENT_CERT_NAME }}
