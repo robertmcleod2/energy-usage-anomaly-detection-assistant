@@ -28,9 +28,9 @@ jobs:
       AZURE_CLIENT_CERT: ${{ secrets.AZURE_CLIENT_CERT }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}  
       # App env variables
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
-      STREAMLIT_PASSWORD: ${{ secrets.STREAMLIT_PASSWORD }}
+      OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+      LANGCHAIN_API_KEY: "${{ secrets.LANGCHAIN_API_KEY }}"
+      STREAMLIT_PASSWORD: "${{ secrets.STREAMLIT_PASSWORD }}"
     
     steps:
       - name: Checkout
