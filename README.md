@@ -1,7 +1,11 @@
 # energy-usage-anomaly-detection-assistant
-The energy usage anomaly detection assistant is an LLM based agentic assistant that uses tools to detect anomalies in smart meter data and provide human readable alerts to the customer.
+The energy usage anomaly detection assistant is an LLM based agentic assistant that uses tools to detect anomalies in smart meter data and provide human readable alerts to the customer. 
 
-## Setup
+The customer interacts with the assistant through a streamlit application. The application is deployed to Azure, and can be accessed [here](https://anomalydetectionprodapp.azurewebsites.net/). Please reach out to Robert Mcleod for the password to access the application.
+
+## Local Setup
+
+To run the application locally, follow the steps below:
 
 1. Clone the repository
 
@@ -23,7 +27,10 @@ conda activate energy-usage-anomaly-detection-assistant
 pip install -r requirements_dev.txt
 ```
 
-4. Run the streamlit application
+4. Set up your local environment variables. Create a `.env` file in the root directory of the project, following the template in the .env_template file. The streamlit password can be set to any value. The `OPENAI_API_KEY` can be obtained from [OpenAI](https://platform.openai.com/api-keys), or reach out to Robert Mcleod for the key.
+
+
+5. Run the streamlit application
 
 ```bash
 streamlit run src/app.py
