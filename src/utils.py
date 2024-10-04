@@ -1,4 +1,3 @@
-import hmac
 import os
 import time
 
@@ -12,14 +11,10 @@ def check_password():
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         password = os.getenv("STREAMLIT_PASSWORD")
-        print(password)
-        print(type(password))
-        print(st.session_state["password"])
-        print(type(st.session_state["password"]))
         if not password:
             st.error("😕 Password not set")
             return False
-        if hmac.compare_digest(st.session_state["password"], password):
+        if st.session_state["password"] == password:
             st.session_state["password_correct"] = True
             st.session_state["show_success"] = True
             del st.session_state["password"]  # Don't store the password.
