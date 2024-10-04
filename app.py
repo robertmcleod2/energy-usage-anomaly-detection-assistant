@@ -1,13 +1,11 @@
-from openai import OpenAI
 import streamlit as st
 from dotenv import load_dotenv
-import os
+
+from basic_chatbot import chain_with_message_history
 
 load_dotenv()
 
-st.title("ChatGPT-like clone")
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+st.title("Energy Usage Anomaly Detection Assistant")
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-4o-mini"
@@ -25,13 +23,8 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        stream = client.chat.completions.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
+        stream = chain_with_message_history.stream(
+            {"input": prompt}, {"configurable": {"session_id": "unused"}}
         )
         response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})
