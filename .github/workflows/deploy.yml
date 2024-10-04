@@ -30,6 +30,7 @@ jobs:
       # App env variables
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+      STREAMLIT_PASSWORD: ${{ secrets.STREAMLIT_PASSWORD }}
     
     steps:
       - name: Checkout
