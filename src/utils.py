@@ -3,6 +3,7 @@ import os
 import time
 
 import streamlit as st
+import logging
 
 
 def check_password():
@@ -11,6 +12,10 @@ def check_password():
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         password = os.getenv("STREAMLIT_PASSWORD")
+        print(password)
+        print(type(password))
+        print(st.session_state["password"])
+        print(type(st.session_state["password"]))
         if not password:
             st.error("😕 Password not set")
             return False
