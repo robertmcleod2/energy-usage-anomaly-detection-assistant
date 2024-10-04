@@ -30,11 +30,12 @@ jobs:
       # App env variables
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+      STREAMLIT_PASSWORD: ${{ secrets.STREAMLIT_PASSWORD }}
     
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Login to Azure and run deploy.sh
+      - name: run deploy.sh
         shell: bash
         run: |
           echo "$AZURE_CLIENT_CERT" > ${{ vars.AZURE_CLIENT_CERT_NAME }}
