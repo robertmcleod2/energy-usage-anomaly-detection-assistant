@@ -22,3 +22,9 @@ conda activate energy-usage-anomaly-detection-assistant
 ```bash
 pip install -r requirements.txt
 ```
+
+4. Run the streamlit application
+
+```bash
+streamlit run app.py
+```
