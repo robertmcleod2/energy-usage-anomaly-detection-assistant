@@ -11,7 +11,6 @@ load_dotenv()
 
 
 def setup_chain():
-
     model = ChatOpenAI(model="gpt-4o-mini")
 
     chat_history = ChatMessageHistory()

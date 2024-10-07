@@ -1,5 +1,5 @@
 import streamlit as st
-from basic_chatbot import setup_chain
+from chatbot_basic import setup_chain
 from dotenv import load_dotenv
 from utils import check_password
 
