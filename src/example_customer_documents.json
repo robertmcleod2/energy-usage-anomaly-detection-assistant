@@ -1,0 +1,190 @@
+{
+    "customer_agent_interactions": {
+        "0": {
+            "datetime": "2024-04-01 12:00:00",
+            "chat_log": [
+                {
+                    "speaker": "customer",
+                    "message": "hi I am having trouble with my account"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "I am sorry to hear that, what seems to be the problem?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "I can't seem to log in"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "are you entering the correct password?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "oh no I entered the wrong password"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "Is it working now?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "yes it is working now, thank you"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "you're welcome, have a great day"
+                }
+            ]
+        },
+        "1": {
+            "datetime": "2024-08-02 12:00:00",
+            "chat_log": [
+                {
+                    "speaker": "customer",
+                    "message": "I have noticed that my energy bill spikes every summer, is there anything I can do to reduce it?"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "Are you using a lot of air conditioning during the summer?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "Yes, I have to keep my house cool"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "Have you considered using a programmable thermostat?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "I have not, what is that?"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "A programmable thermostat allows you to set the temperature of your home at different times of the day, so you can save energy when you are not home"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "That sounds like a good idea, I will look into it"
+                },
+                {
+                    "speaker": "agent",
+                    "message": "Great, let me know if you have any other questions"
+                }
+            ]
+        }
+    },
+    "customer_chatbot_interactions": {
+        "0": {
+            "datetime": "2024-09-01 12:00:00",
+            "chat_log": [
+                {
+                    "speaker": "customer",
+                    "message": "hi I tried to use a programmable thermostat for my air conditioner in summer but it didn't work"
+                },
+                {
+                    "speaker": "chatbot",
+                    "message": "I'm sorry to hear that, what seems to be the problem?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "I set the temperature during the day to 25 degrees whilst I am in the office, and 20 degrees when I am at home, but my bill is still high"
+                },
+                {
+                    "speaker": "chatbot",
+                    "message": "is the bill higher during the period you are at home?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "no, it is higher during the day when I am at work"
+                },
+                {
+                    "speaker": "chatbot",
+                    "message": "It sounds like either it is very hot during the day or the thermostat is not working properly. What is the temperature outside during the day?"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "it is around 35 degrees"
+                },
+                {
+                    "speaker": "chatbot",
+                    "message": "It sounds like the air conditioner is working hard to keep the house cool even when you are not home. You may want to consider setting the temperature higher during the day or turning it off when you are not home"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "I will try that, thank you"
+                }
+            ]
+        },
+        "1": {
+            "datetime": "2024-09-15 12:00:00",
+            "chat_log": [
+                {
+                    "speaker": "customer",
+                    "message": "Hi my smart meter is broken, can you help me fix it?"
+                },
+                {
+                    "speaker": "chatbot",
+                    "message": "I'm sorry to hear that, let me transfer you to a customer service agent who can help you with that"
+                },
+                {
+                    "speaker": "customer",
+                    "message": "Thank you"
+                }
+            ]
+        }
+    },
+    "customer_documents": {
+        "0": {
+            "datetime": "2024-01-01 12:00:00",
+            "document_type": "bill",
+            "document_name": "energy bill",
+            "document_url": "https://www.example.com/bill/energy_bill_2024_01_01.pdf"
+        },
+        "1": {
+            "datetime": "2024-02-01 12:00:00",
+            "document_type": "bill",
+            "document_name": "energy bill",
+            "document_url": "https://www.example.com/bill/energy_bill_2024_02_01.pdf"
+        },
+        "2": {
+            "datetime": "2024-03-01 12:00:00",
+            "document_type": "bill",
+            "document_name": "energy bill",
+            "document_url": "https://www.example.com/bill/energy_bill_2024_03_01.pdf"
+        },
+        "3": {
+            "datetime": "2024-04-01 12:00:00",
+            "document_type": "bill",
+            "document_name": "energy bill",
+            "document_url": "https://www.example.com/bill/energy_bill_2024_04_01.pdf"
+        }
+    },
+    "company_documents": {
+        "0": {
+            "datetime": "2024-01-01 12:00:00",
+            "document_type": "policy",
+            "document_name": "privacy policy",
+            "document_url": "https://www.example.com/policy/privacy_policy.pdf"
+        },
+        "1": {
+            "datetime": "2024-02-01 12:00:00",
+            "document_type": "policy",
+            "document_name": "terms of service",
+            "document_url": "https://www.example.com/policy/terms_of_service.pdf"
+        },
+        "2": {
+            "datetime": "2024-03-01 12:00:00",
+            "document_type": "policy",
+            "document_name": "refund policy",
+            "document_url": "https://www.example.com/policy/refund_policy.pdf"
+        },
+        "3": {
+            "datetime": "2024-04-01 12:00:00",
+            "document_type": "policy",
+            "document_name": "cookie policy",
+            "document_url": "https://www.example.com/policy/cookie_policy.pdf"
+        }
+    }
+}

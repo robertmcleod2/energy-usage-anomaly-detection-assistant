@@ -2,7 +2,6 @@ import os
 import time
 
 import streamlit as st
-import logging
 
 
 def check_password():

@@ -4,7 +4,7 @@ export $(egrep -v '^#' .env | xargs)
 LOCATION=westeurope
 
 # log in to Azure with service principal
-az login --service-principal --username ${AZURE_CLIENT_ID} --password ${AZURE_CLIENT_CERT_NAME} --tenant ${AZURE_TENANT_ID}
+az login --service-principal --username ${AZURE_CLIENT_ID} --password ${AZURE_CLIENT_CERTIFICATE_PATH} --tenant ${AZURE_TENANT_ID}
 az account set --subscription ${AZURE_SUBSCRIPTION_ID}
 az config set defaults.group=${AZURE_RESOURCE_GROUP} defaults.location=${LOCATION}
 

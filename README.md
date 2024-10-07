@@ -35,3 +35,5 @@ pip install -r requirements_dev.txt
 ```bash
 streamlit run src/app.py
 ```
+
+6. View the application in your browser at `http://localhost:8501`. The password is the one you set in the `.env` file.

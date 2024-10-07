@@ -20,12 +20,13 @@ jobs:
       contents: read
     # retrieve variables from environment secrets and variables
     env:
-      # deplyoment variables
+      # deployment variables
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-      AZURE_CLIENT_CERT_NAME: ${{ vars.AZURE_CLIENT_CERT_NAME }}
-      AZURE_CLIENT_CERT: ${{ secrets.AZURE_CLIENT_CERT }}
+      # blank variable to store the certificate content
+      AZURE_CLIENT_CERTIFICATE_PATH: "blank"
+      AZURE_CLIENT_CERTIFICATE: ${{ secrets.AZURE_CLIENT_CERTIFICATE }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}  
       # App env variables
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -38,11 +39,11 @@ jobs:
       - name: run deploy.sh
         shell: bash
         run: |
-          echo "$AZURE_CLIENT_CERT" > ${{ vars.AZURE_CLIENT_CERT_NAME }}
+          echo "$AZURE_CLIENT_CERTIFICATE" > ${AZURE_CLIENT_CERTIFICATE_PATH}
           bash deployment/deploy.sh
       - name: clean up
         if: always()
         shell: bash
         run: |
           az logout
-          rm ${{ vars.AZURE_CLIENT_CERT_NAME }}
+          rm ${AZURE_CLIENT_CERTIFICATE_PATH}
