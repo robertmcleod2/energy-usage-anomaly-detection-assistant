@@ -1,5 +1,6 @@
 import json
 
+import streamlit as st
 from dotenv import load_dotenv
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -16,65 +17,80 @@ set_debug(True)
 load_dotenv()
 
 
-def setup_chain():
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+class ChatbotRAG:
 
-    ### Construct retriever ###
-    with open("src/example_customer_documents.json") as f:
-        json_data = json.load(f)
+    def __init__(self):
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
-    splitter = RecursiveJsonSplitter(max_chunk_size=300)
-    docs = splitter.create_documents(texts=[json_data])
+        ### Construct retriever ###
+        with open("src/example_customer_documents.json") as f:
+            json_data = json.load(f)
 
-    vectorstore = InMemoryVectorStore.from_documents(documents=docs, embedding=OpenAIEmbeddings())
-    retriever = vectorstore.as_retriever()
+        splitter = RecursiveJsonSplitter(max_chunk_size=300)
+        docs = splitter.create_documents(texts=[json_data])
 
-    ### Contextualize question ###
-    contextualize_q_system_prompt = """Given a chat history and the latest user question \
-    which might reference context in the chat history, formulate a standalone question \
-    which can be understood without the chat history. \
-    Include information relevant to energy anomaly detection in the question, if needed. \
-    Do NOT answer the question, just reformulate it if needed and otherwise return it as is."""
-    contextualize_q_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", contextualize_q_system_prompt),
-            MessagesPlaceholder("chat_history"),
-            ("human", "{input}"),
-        ]
-    )
-    history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
+        vectorstore = InMemoryVectorStore.from_documents(documents=docs, embedding=OpenAIEmbeddings())
+        retriever = vectorstore.as_retriever()
 
-    ### Answer question ###
-    qa_system_prompt = """You are an an energy usage anomaly detection assistant. \
-    You are helping a user to detect anomalies in their energy usage. \
-    The user will describe their energy usage and you will help them to detect anomalies. \
-    You will also help the user to identify the causes of the anomalies \
-    and suggest ways to fix them. \
+        ### Contextualize question ###
+        contextualize_q_system_prompt = """Given a chat history and the latest user question \
+        which might reference context in the chat history, formulate a standalone question \
+        which can be understood without the chat history. \
+        Include information relevant to energy anomaly detection in the question, if needed. \
+        Do NOT answer the question, just reformulate it if needed and otherwise return it as is."""
+        contextualize_q_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", contextualize_q_system_prompt),
+                MessagesPlaceholder("chat_history"),
+                ("human", "{input}"),
+            ]
+        )
+        history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
 
-    Use the following pieces of retrieved context to answer the question if needed. \
-    Follow up on previous parts of customer service chatbot and agent conversations that are not yet resolved. \
+        ### Answer question ###
+        qa_system_prompt = """You are an an energy usage anomaly detection assistant. \
+        You are helping a user to detect anomalies in their energy usage. \
+        The user will describe their energy usage and you will help them to detect anomalies. \
+        You will also help the user to identify the causes of the anomalies \
+        and suggest ways to fix them. \
 
-    {context}"""
+        Use the following pieces of retrieved context to answer the question if needed. \
+        Follow up on previous parts of customer service chatbot and agent conversations that are not yet resolved. \
 
-    qa_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", qa_system_prompt),
-            MessagesPlaceholder("chat_history"),
-            ("human", "{input}"),
-        ]
-    )
-    question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
+        {context}"""
 
-    rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+        qa_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", qa_system_prompt),
+                MessagesPlaceholder("chat_history"),
+                ("human", "{input}"),
+            ]
+        )
+        question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
-    ### Statefully manage chat history ###
-    chat_history = ChatMessageHistory()
+        rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-    conversational_rag_chain = RunnableWithMessageHistory(
-        rag_chain,
-        lambda session_id: chat_history,
-        input_messages_key="input",
-        history_messages_key="chat_history",
-    )
+        ### Statefully manage chat history ###
+        chat_history = ChatMessageHistory()
 
-    return conversational_rag_chain
+        self.chain = RunnableWithMessageHistory(
+            rag_chain,
+            lambda session_id: chat_history,
+            input_messages_key="input",
+            history_messages_key="chat_history",
+            output_messages_key="answer",
+        )
+
+    def stream(self, input):
+        stream = self.chain.stream({"input": input}, {"configurable": {"session_id": "unused"}})
+
+        def stream_func():
+            for chunk in stream:
+                for key in chunk:
+                    if key == "answer":
+                        yield chunk[key]
+                    
+        response = st.write_stream(stream_func)
+
+        return response
+
