@@ -26,7 +26,7 @@ jobs:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       # blank variable to store the certificate content
       AZURE_CLIENT_CERT_NAME: "blank"
-      AZURE_CLIENT_CERT: ${{ secrets.AZURE_CLIENT_CERT }}
+      AZURE_CLIENT_CERT: "test"
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}  
       # App env variables
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
