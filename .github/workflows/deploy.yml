@@ -24,7 +24,8 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-      AZURE_CLIENT_CERT_NAME: ${{ vars.AZURE_CLIENT_CERT_NAME }}
+      # blank variable to store the certificate content
+      AZURE_CLIENT_CERT_NAME: "blank"
       AZURE_CLIENT_CERT: ${{ secrets.AZURE_CLIENT_CERT }}
       AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}  
       # App env variables
