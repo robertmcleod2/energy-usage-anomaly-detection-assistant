@@ -1,5 +1,5 @@
 import streamlit as st
-from chatbot_rag import ChatbotRAG as Chatbot
+from chatbot_rag_anomaly_detection import ChatbotRAG as Chatbot
 from dotenv import load_dotenv
 from utils import check_password
 
