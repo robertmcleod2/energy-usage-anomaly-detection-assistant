@@ -46,4 +46,4 @@ jobs:
         shell: bash
         run: |
           az logout
-          rm ${{ vars.AZURE_CLIENT_CERTIFICATE_PATH }}
+          rm ${AZURE_CLIENT_CERTIFICATE_PATH}
