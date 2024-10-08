@@ -4,3 +4,4 @@ python-dotenv
 streamlit
 plotly
 nbformat
+scipy
