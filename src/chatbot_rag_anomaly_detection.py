@@ -21,21 +21,34 @@ load_dotenv()
 class ChatbotRAG:
 
     def __init__(self):
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-
-        # detect anomalies in energy usage
+        
+        ### Load smart meter data and detect anomalies ###
         df = load_smart_meter_data()
         anomalies = detect_anomalies(df)
         if anomalies is not None:
             fig = plot_anomalies(df, anomalies)
-            st.plotly_chart(fig)
+            st.session_state.messages.append({"role": "assistant", "content": fig})
             anomalies_str = ", ".join(anomalies.strftime("%Y-%m-%d"))
-            anomaly_text = f"""Anomalies have been detected in the customer's energy usage. \
+            self.anomaly_text = f"""Anomalies have been detected in the customer's energy usage. \
             The anomalies are on the following dates: {anomalies_str}. \
             Help the user to identify the causes of the anomalies and suggest ways to fix them."""
         else:
-            anomaly_text = """No anomalies have been detected in the customer's energy usage. \
+            self.anomaly_text = """No anomalies have been detected in the customer's energy usage. \
             You may still help the user to address any concerns they have about their energy usage."""
+
+        ### initialize chain ###
+        self.initialize_chain()
+
+        ### invoke chain for initial summary ###
+        initial_prompt = """provide a summary of the anomalies detected in the my energy usage \
+        from the smart meter data and any other relevant context."""
+        response = self.stream(initial_prompt)
+        st.plotly_chart(fig)
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+    def initialize_chain(self):
+
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
         ### Construct retriever ###
         with open("src/example_customer_documents.json") as f:
@@ -67,15 +80,15 @@ class ChatbotRAG:
             f"""You are an an energy usage anomaly detection assistant. \
         You are helping a user to detect anomalies in their energy usage. \
         An anomaly detection has already been performed. \
-        {anomaly_text} \
+        {self.anomaly_text} \
         """
             + """ The user will describe their energy usage and you will help them to resolve \
         or determine additional issues. \
         You will also help the user to identify the causes of the anomalies \
         and suggest ways to fix them. \
+        Follow up on previous parts of customer service chatbot and agent conversations that are not yet resolved. \
         
         Use the following pieces of retrieved context to answer the question if needed. \
-        Follow up on previous parts of customer service chatbot and agent conversations that are not yet resolved. \
 
         {context}"""
         )
