@@ -2,3 +2,6 @@ langchain-openai
 langchain-community
 python-dotenv
 streamlit
+plotly
+nbformat
+scipy
