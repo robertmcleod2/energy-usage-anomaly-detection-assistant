@@ -16,14 +16,15 @@ from utils import (
     detect_prolonged_anomalies,
     generate_anomaly_text,
     load_smart_meter_data,
+    load_weather_data,
     plot_anomalies,
+    analyse_weather_data,
+    plot_weather,
 )
 
 set_debug(True)
 
 load_dotenv()
-
-current_date = "2024-09-01"
 
 class ChatbotRAG:
 
@@ -31,12 +32,15 @@ class ChatbotRAG:
 
         ### Load smart meter data and detect anomalies ###
         df = load_smart_meter_data()
+        weather_df = load_weather_data()
         anomalies = detect_daily_anomalies(df)
         prolonged_anomalies = detect_prolonged_anomalies(df)
-        if anomalies is not None or prolonged_anomalies is not None:
-            fig = plot_anomalies(df, anomalies, prolonged_anomalies)
-            st.session_state.messages.append({"role": "assistant", "content": fig})
-        self.anomaly_text = generate_anomaly_text(anomalies, prolonged_anomalies)
+        average_temperature_str, anomaly_temperatures_str, prolonged_anomaly_temperatures_str = analyse_weather_data(weather_df, anomalies, prolonged_anomalies)
+        fig = plot_anomalies(df, anomalies, prolonged_anomalies)
+        st.session_state.messages.append({"role": "assistant", "content": fig})
+        fig_weather = plot_weather(weather_df)
+        st.session_state.messages.append({"role": "assistant", "content": fig_weather})
+        self.anomaly_text = generate_anomaly_text(anomalies, prolonged_anomalies, average_temperature_str, anomaly_temperatures_str, prolonged_anomaly_temperatures_str)
 
         ### initialize chain ###
         self.initialize_chain()
@@ -46,6 +50,7 @@ class ChatbotRAG:
         from the smart meter data and any other relevant context."""
         response = self.stream(initial_prompt)
         st.plotly_chart(fig)
+        st.plotly_chart(fig_weather)
         st.session_state.messages.append({"role": "assistant", "content": response})
 
     def initialize_chain(self):
