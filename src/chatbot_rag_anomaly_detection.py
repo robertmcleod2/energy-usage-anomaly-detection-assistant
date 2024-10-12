@@ -12,19 +12,20 @@ from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveJsonSplitter
 from utils import (
+    analyse_weather_data,
     detect_daily_anomalies,
     detect_prolonged_anomalies,
     generate_anomaly_text,
     load_smart_meter_data,
     load_weather_data,
     plot_anomalies,
-    analyse_weather_data,
     plot_weather,
 )
 
 set_debug(True)
 
 load_dotenv()
+
 
 class ChatbotRAG:
 
@@ -35,12 +36,20 @@ class ChatbotRAG:
         weather_df = load_weather_data()
         anomalies = detect_daily_anomalies(df)
         prolonged_anomalies = detect_prolonged_anomalies(df)
-        average_temperature_str, anomaly_temperatures_str, prolonged_anomaly_temperatures_str = analyse_weather_data(weather_df, anomalies, prolonged_anomalies)
+        average_temperature_str, anomaly_temperatures_str, prolonged_anomaly_temperatures_str = (
+            analyse_weather_data(weather_df, anomalies, prolonged_anomalies)
+        )
         fig = plot_anomalies(df, anomalies, prolonged_anomalies)
         st.session_state.messages.append({"role": "assistant", "content": fig})
         fig_weather = plot_weather(weather_df)
         st.session_state.messages.append({"role": "assistant", "content": fig_weather})
-        self.anomaly_text = generate_anomaly_text(anomalies, prolonged_anomalies, average_temperature_str, anomaly_temperatures_str, prolonged_anomaly_temperatures_str)
+        self.anomaly_text = generate_anomaly_text(
+            anomalies,
+            prolonged_anomalies,
+            average_temperature_str,
+            anomaly_temperatures_str,
+            prolonged_anomaly_temperatures_str,
+        )
 
         ### initialize chain ###
         self.initialize_chain()

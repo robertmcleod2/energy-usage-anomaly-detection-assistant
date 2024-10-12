@@ -1,12 +1,12 @@
 import streamlit as st
 from chatbot_rag_anomaly_detection import ChatbotRAG as Chatbot
 from dotenv import load_dotenv
-from utils import check_password, set_logo
+from utils import set_logo  # , check_password
 
 load_dotenv()
 
-if not check_password():
-    st.stop()  # Do not continue if check_password is not True.
+# if not check_password():
+#     st.stop()  # Do not continue if check_password is not True.
 
 st.title("Energy Usage Anomaly Detection Assistant")
 set_logo("src/logo.png")
