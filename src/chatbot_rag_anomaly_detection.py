@@ -64,7 +64,7 @@ class ChatbotRAG:
 
     def initialize_chain(self):
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
         ### Construct retriever ###
         with open("src/example_customer_documents.json") as f:
