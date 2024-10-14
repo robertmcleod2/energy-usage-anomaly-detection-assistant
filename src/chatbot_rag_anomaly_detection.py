@@ -40,9 +40,7 @@ class ChatbotRAG:
             analyse_weather_data(weather_df, anomalies, prolonged_anomalies)
         )
         fig = plot_anomalies(df, anomalies, prolonged_anomalies)
-        st.session_state.messages.append({"role": "assistant", "content": fig})
         fig_weather = plot_weather(weather_df)
-        st.session_state.messages.append({"role": "assistant", "content": fig_weather})
         self.anomaly_text = generate_anomaly_text(
             anomalies,
             prolonged_anomalies,
@@ -61,6 +59,8 @@ class ChatbotRAG:
         st.plotly_chart(fig)
         st.plotly_chart(fig_weather)
         st.session_state.messages.append({"role": "assistant", "content": response})
+        st.session_state.messages.append({"role": "assistant", "content": fig})
+        st.session_state.messages.append({"role": "assistant", "content": fig_weather})
 
     def initialize_chain(self):
 
