@@ -11,7 +11,16 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveJsonSplitter
-from utils import detect_anomalies, load_smart_meter_data, plot_anomalies
+from utils import (
+    analyse_weather_data,
+    detect_daily_anomalies,
+    detect_prolonged_anomalies,
+    generate_anomaly_text,
+    load_smart_meter_data,
+    load_weather_data,
+    plot_anomalies,
+    plot_weather,
+)
 
 set_debug(True)
 
@@ -21,20 +30,26 @@ load_dotenv()
 class ChatbotRAG:
 
     def __init__(self):
-        
+
         ### Load smart meter data and detect anomalies ###
         df = load_smart_meter_data()
-        anomalies = detect_anomalies(df)
-        if anomalies is not None:
-            fig = plot_anomalies(df, anomalies)
-            st.session_state.messages.append({"role": "assistant", "content": fig})
-            anomalies_str = ", ".join(anomalies.strftime("%Y-%m-%d"))
-            self.anomaly_text = f"""Anomalies have been detected in the customer's energy usage. \
-            The anomalies are on the following dates: {anomalies_str}. \
-            Help the user to identify the causes of the anomalies and suggest ways to fix them."""
-        else:
-            self.anomaly_text = """No anomalies have been detected in the customer's energy usage. \
-            You may still help the user to address any concerns they have about their energy usage."""
+        weather_df = load_weather_data()
+        anomalies = detect_daily_anomalies(df)
+        prolonged_anomalies = detect_prolonged_anomalies(df)
+        average_temperature_str, anomaly_temperatures_str, prolonged_anomaly_temperatures_str = (
+            analyse_weather_data(weather_df, anomalies, prolonged_anomalies)
+        )
+        fig = plot_anomalies(df, anomalies, prolonged_anomalies)
+        st.session_state.messages.append({"role": "assistant", "content": fig})
+        fig_weather = plot_weather(weather_df)
+        st.session_state.messages.append({"role": "assistant", "content": fig_weather})
+        self.anomaly_text = generate_anomaly_text(
+            anomalies,
+            prolonged_anomalies,
+            average_temperature_str,
+            anomaly_temperatures_str,
+            prolonged_anomaly_temperatures_str,
+        )
 
         ### initialize chain ###
         self.initialize_chain()
@@ -44,6 +59,7 @@ class ChatbotRAG:
         from the smart meter data and any other relevant context."""
         response = self.stream(initial_prompt)
         st.plotly_chart(fig)
+        st.plotly_chart(fig_weather)
         st.session_state.messages.append({"role": "assistant", "content": response})
 
     def initialize_chain(self):
@@ -81,6 +97,10 @@ class ChatbotRAG:
         You are helping a user to detect anomalies in their energy usage. \
         An anomaly detection has already been performed. \
         {self.anomaly_text} \
+        If there are anomalies, you can compare when they have occured against the additional context \
+        provided to determine if there are any patterns. You have been provided data up to 2024-08-31, and \
+        so if any anomalies continue up to the end of the data you have been provided, \
+        they may still be ongoing. This must be taken into account when providing advice.
         """
             + """ The user will describe their energy usage and you will help them to resolve \
         or determine additional issues. \
