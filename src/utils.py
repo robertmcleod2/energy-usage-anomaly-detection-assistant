@@ -1,4 +1,3 @@
-import base64
 import os
 import time
 
@@ -40,33 +39,6 @@ def check_password():
     if "password_correct" in st.session_state:
         st.error("😕 Password incorrect")
     return False
-
-
-def set_logo(main_bg):
-    """
-    A function to unpack an image from root folder and set as bg.
-
-    Returns
-    -------
-    The background.
-    """
-    # set bg name
-    main_bg_ext = "png"
-
-    st.markdown(
-        f"""
-         <style>
-         .stApp {{
-             background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()});
-             background-size: 200px 200px;
-             background-repeat: no-repeat;
-             background-position: top 50px left 50px
-
-         }}
-         </style>
-         """,
-        unsafe_allow_html=True,
-    )
 
 
 def load_smart_meter_data():
